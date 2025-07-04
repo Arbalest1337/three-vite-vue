@@ -1,11 +1,12 @@
 <template>
   <div class="home">
-    <button class="btn" @click="() => router.push('/dashboard')">go dashboard</button>
     <div class="wrapper" ref="threeRef" />
+    <ActionLayer />
   </div>
 </template>
 <script setup>
 import useThree from '@/hooks/useThree'
+import ActionLayer from './ActionLayer.vue'
 const threeRef = shallowRef(null)
 
 const { init } = useThree({ target: threeRef })
@@ -17,10 +18,8 @@ const router = useRouter()
 <style lang="scss" scoped>
 .home {
   position: relative;
-}
-.btn {
-  position: absolute;
-  top: 8px;
-  left: 8px;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 </style>

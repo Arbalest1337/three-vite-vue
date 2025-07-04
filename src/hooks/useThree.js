@@ -1,17 +1,17 @@
-import * as THREE from "three"
-import { OrbitControls } from "three/addons/controls/OrbitControls"
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader"
-import { debounce } from "lodash-es"
-import pathData from "./path.json"
-import Stats from "three/addons/libs/stats.module"
-import { Card } from "./Card"
+import * as THREE from 'three'
+import { OrbitControls } from 'three/addons/controls/OrbitControls'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader'
+import { debounce } from 'lodash-es'
+import pathData from './path.json'
+import Stats from 'three/addons/libs/stats.module'
+import { Card } from './Card'
 
 export default function useThree({ target }) {
   const width = window.innerWidth
   const height = window.innerHeight
 
   const stats = new Stats()
-  document.body.appendChild(stats.dom)
+  // document.body.appendChild(stats.dom)
 
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(50, width / height, 0.01, 1000)
@@ -41,8 +41,8 @@ export default function useThree({ target }) {
   }, 300)
 
   watchEffect(() => {
-    window.addEventListener("resize", onResize)
-    onWatcherCleanup(() => window.removeEventListener("resize", onResize))
+    window.addEventListener('resize', onResize)
+    onWatcherCleanup(() => window.removeEventListener('resize', onResize))
   })
 
   const loadGLTF = (path, { onProgress } = {}) => {
@@ -50,10 +50,10 @@ export default function useThree({ target }) {
     return new Promise((resolve, reject) => {
       loader.load(
         path,
-        (gltf) => {
+        gltf => {
           resolve(gltf)
         },
-        (e) => onProgress?.(e),
+        e => onProgress?.(e),
         reject
       )
     })
@@ -81,12 +81,12 @@ export default function useThree({ target }) {
   }
 
   const drawModel = async () => {
-    const gltf = await loadGLTF("/model/factory/scene.gltf")
+    const gltf = await loadGLTF('/model/factory/scene.gltf')
     const model = gltf.scene
     const box = new THREE.Box3().setFromObject(model)
     const minY = box.min.y
     model.position.y -= minY
-    model.traverse((child) => {
+    model.traverse(child => {
       if (child.isObject3D) {
         child.castShadow = true
         child.receiveShadow = true
@@ -96,11 +96,11 @@ export default function useThree({ target }) {
   }
 
   // start
-  const animate = (time) => {
+  const animate = time => {
     controls.update()
     stats.update()
+    Object.values(cards).forEach(card => card.animate())
     renderer.render(scene, camera)
-    Object.values(cards).forEach((card) => card.animate())
   }
 
   const cards = {}
@@ -113,19 +113,20 @@ export default function useThree({ target }) {
     })
     cardsGroup.remove(...cardsGroup.children)
   }
-  const setCards = (cardList) => {
+  const setCards = cardList => {
     clearCards()
     cardList.forEach(({ points, id, color }) => {
       const card = new Card({
         color,
         points,
-        id,
+        id
       })
       cardsGroup.add(card.scene)
       cards[id] = card
     })
   }
 
+  console.log(stats)
   // fps limit
   let lastTime = 0
   const targetFPS = 60
@@ -134,7 +135,7 @@ export default function useThree({ target }) {
   const init = async () => {
     await drawModel()
     drawSunlight()
-    renderer.setAnimationLoop((time) => {
+    renderer.setAnimationLoop(time => {
       const delta = time - lastTime
       if (delta < targetFrameTime) return
       lastTime = time - (delta % targetFrameTime)
@@ -145,7 +146,7 @@ export default function useThree({ target }) {
       pathData.map((item, i) => ({
         points: item,
         id: i,
-        color: item[0].color,
+        color: item[0].color
       }))
     )
     unref(target).appendChild(renderer.domElement)

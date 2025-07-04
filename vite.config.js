@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import { resolve, dirname } from 'path'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
+import vuetify from 'vite-plugin-vuetify'
 
 const serverConfig = {
   host: '0.0.0.0',
@@ -13,6 +14,7 @@ const serverConfig = {
 export default defineConfig({
   plugins: [
     vue(),
+    vuetify({ autoImport: true }),
     AutoImport({
       imports: ['vue', 'vue-router'],
       dirs: [],
