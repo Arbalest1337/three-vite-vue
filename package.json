@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vueuse/core": "^13.5.0",
     "lodash-es": "^4.17.21",
     "pinia": "^3.0.3",
     "three": "^0.177.0",
